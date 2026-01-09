@@ -1,0 +1,14 @@
+D:\UNI\ProiectPOO\HotelSelfCheck\HotelSelfCheck\bin\Debug\net9.0\HotelSelfCheck.exe
+D:\UNI\ProiectPOO\HotelSelfCheck\HotelSelfCheck\bin\Debug\net9.0\HotelSelfCheck.deps.json
+D:\UNI\ProiectPOO\HotelSelfCheck\HotelSelfCheck\bin\Debug\net9.0\HotelSelfCheck.runtimeconfig.json
+D:\UNI\ProiectPOO\HotelSelfCheck\HotelSelfCheck\bin\Debug\net9.0\HotelSelfCheck.dll
+D:\UNI\ProiectPOO\HotelSelfCheck\HotelSelfCheck\bin\Debug\net9.0\HotelSelfCheck.pdb
+D:\UNI\ProiectPOO\HotelSelfCheck\HotelSelfCheck\obj\Debug\net9.0\HotelSelfCheck.GeneratedMSBuildEditorConfig.editorconfig
+D:\UNI\ProiectPOO\HotelSelfCheck\HotelSelfCheck\obj\Debug\net9.0\HotelSelfCheck.AssemblyInfoInputs.cache
+D:\UNI\ProiectPOO\HotelSelfCheck\HotelSelfCheck\obj\Debug\net9.0\HotelSelfCheck.AssemblyInfo.cs
+D:\UNI\ProiectPOO\HotelSelfCheck\HotelSelfCheck\obj\Debug\net9.0\HotelSelfCheck.csproj.CoreCompileInputs.cache
+D:\UNI\ProiectPOO\HotelSelfCheck\HotelSelfCheck\obj\Debug\net9.0\HotelSelfCheck.dll
+D:\UNI\ProiectPOO\HotelSelfCheck\HotelSelfCheck\obj\Debug\net9.0\refint\HotelSelfCheck.dll
+D:\UNI\ProiectPOO\HotelSelfCheck\HotelSelfCheck\obj\Debug\net9.0\HotelSelfCheck.pdb
+D:\UNI\ProiectPOO\HotelSelfCheck\HotelSelfCheck\obj\Debug\net9.0\HotelSelfCheck.genruntimeconfig.cache
+D:\UNI\ProiectPOO\HotelSelfCheck\HotelSelfCheck\obj\Debug\net9.0\ref\HotelSelfCheck.dll
