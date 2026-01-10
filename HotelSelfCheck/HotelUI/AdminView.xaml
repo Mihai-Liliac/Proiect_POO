@@ -1,0 +1,264 @@
+<Window x:Class="HotelUI.AdminView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Hotel Management Admin" Height="800" Width="1200"
+        WindowStartupLocation="CenterScreen" WindowStyle="None" 
+        AllowsTransparency="True" Background="Transparent"
+        Icon="icon.png"
+        TextOptions.TextFormattingMode="Display" 
+        UseLayoutRounding="True">
+
+    <Window.Resources>
+        <Style x:Key="NavButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#CBD5E0"/>
+            <Setter Property="FontSize" Value="15"/>
+            <Setter Property="Height" Value="55"/>
+            <Setter Property="Margin" Value="0,8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="16">
+                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" Margin="25,0"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="border" Property="Background" Value="#2D3748"/><Setter Property="Foreground" Value="White"/></Trigger>
+                            <Trigger Property="Tag" Value="Active"><Setter TargetName="border" Property="Background" Value="#10B981"/><Setter Property="Foreground" Value="White"/></Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CloseButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#A0AEC0"/>
+            <Setter Property="FontSize" Value="28"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="btnBorder" Background="{TemplateBinding Background}" CornerRadius="0,30,0,0">
+                            <ContentPresenter x:Name="btnContent" HorizontalAlignment="Center" VerticalAlignment="Center" RenderTransformOrigin="0.5,0.5">
+                                <ContentPresenter.RenderTransform><TransformGroup><ScaleTransform x:Name="scale" ScaleX="1" ScaleY="1"/><RotateTransform x:Name="rotate" Angle="0"/></TransformGroup></ContentPresenter.RenderTransform>
+                            </ContentPresenter>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <EventTrigger RoutedEvent="MouseEnter">
+                                <BeginStoryboard><Storyboard><DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleX" To="1.5" Duration="0:0:0.2"/><DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleY" To="1.5" Duration="0:0:0.2"/><DoubleAnimation Storyboard.TargetName="rotate" Storyboard.TargetProperty="Angle" To="90" Duration="0:0:0.2"/><ColorAnimation Storyboard.TargetProperty="(Button.Foreground).(SolidColorBrush.Color)" To="#10B981" Duration="0:0:0.2"/></Storyboard></BeginStoryboard>
+                            </EventTrigger>
+                            <EventTrigger RoutedEvent="MouseLeave">
+                                <BeginStoryboard><Storyboard><DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleX" To="1" Duration="0:0:0.2"/><DoubleAnimation Storyboard.TargetName="scale" Storyboard.TargetProperty="ScaleY" To="1" Duration="0:0:0.2"/><DoubleAnimation Storyboard.TargetName="rotate" Storyboard.TargetProperty="Angle" To="0" Duration="0:0:0.2"/><ColorAnimation Storyboard.TargetProperty="(Button.Foreground).(SolidColorBrush.Color)" To="#A0AEC0" Duration="0:0:0.2"/></Storyboard></BeginStoryboard>
+                            </EventTrigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <ControlTemplate x:Key="ModernComboTemplate" TargetType="ComboBox">
+            <Grid>
+                <ToggleButton Name="ToggleButton" Template="{DynamicResource ComboBoxToggleButton}" Grid.Column="2" Focusable="false" IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press"/>
+                <ContentPresenter Name="ContentSite" IsHitTestVisible="False"  Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" Margin="15,3,23,3" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <TextBox x:Name="PART_EditableTextBox" Style="{x:Null}" Template="{DynamicResource ComboBoxTextBox}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="3,3,23,3" Focusable="True" Background="Transparent" Visibility="Hidden" IsReadOnly="{TemplateBinding IsReadOnly}"/>
+                <Popup Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
+                    <Grid Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                        <Border x:Name="DropDownBorder" Background="White" BorderThickness="1" BorderBrush="#E2E8F0" CornerRadius="10" Margin="0,5,0,0">
+                            <Border.Effect><DropShadowEffect BlurRadius="10" Opacity="0.1" ShadowDepth="2" Color="#A0AEC0"/></Border.Effect>
+                            <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True"><StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" /></ScrollViewer>
+                        </Border>
+                    </Grid>
+                </Popup>
+            </Grid>
+        </ControlTemplate>
+        <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="ToggleButton"><Grid><Grid.ColumnDefinitions><ColumnDefinition /><ColumnDefinition Width="30" /></Grid.ColumnDefinitions><Border x:Name="Border" Grid.ColumnSpan="2" CornerRadius="8" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" /><Path x:Name="Arrow" Grid.Column="1" Fill="#A0AEC0" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 0 L 4 4 L 8 0 Z"/></Grid><ControlTemplate.Triggers><Trigger Property="IsMouseOver" Value="true"><Setter TargetName="Border" Property="BorderBrush" Value="#10B981" /><Setter TargetName="Arrow" Property="Fill" Value="#10B981"/><Setter TargetName="Border" Property="Background" Value="#F9FAFB"/></Trigger></ControlTemplate.Triggers></ControlTemplate>
+        <ControlTemplate x:Key="ComboBoxTextBox" TargetType="TextBox"><Border x:Name="PART_ContentHost" Focusable="False" Background="{TemplateBinding Background}" /></ControlTemplate>
+        <Style x:Key="ModernComboBoxStyle" TargetType="ComboBox"><Setter Property="Template" Value="{StaticResource ModernComboTemplate}"/><Setter Property="Foreground" Value="#4A5568"/><Setter Property="Padding" Value="10,0"/><Setter Property="Height" Value="45"/><Setter Property="ItemContainerStyle"><Setter.Value><Style TargetType="ComboBoxItem"><Setter Property="Padding" Value="10,8"/><Setter Property="Cursor" Value="Hand"/><Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ComboBoxItem"><Border x:Name="Bd" Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}" CornerRadius="3"><ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/></Border><ControlTemplate.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Bd" Property="Background" Value="#F0FFF4"/><Setter Property="Foreground" Value="#10B981"/></Trigger><Trigger Property="IsSelected" Value="True"><Setter TargetName="Bd" Property="Background" Value="#F0FFF4"/><Setter Property="Foreground" Value="#10B981"/></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter></Style></Setter.Value></Setter></Style>
+        
+        <Style x:Key="MultiSelectToggleStyle" TargetType="ToggleButton">
+            <Setter Property="Height" Value="45"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#4A5568"/>
+            <Setter Property="BorderBrush" Value="#E2E8F0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Border x:Name="Border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" CornerRadius="8">
+                            <Grid>
+                                <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="30"/></Grid.ColumnDefinitions>
+                                <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" Margin="15,0,0,0"/>
+                                <Path x:Name="Arrow" Grid.Column="1" Fill="#A0AEC0" HorizontalAlignment="Center" VerticalAlignment="Center" Data="M 0 0 L 4 4 L 8 0 Z"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Border" Property="BorderBrush" Value="#10B981"/><Setter TargetName="Arrow" Property="Fill" Value="#10B981"/><Setter TargetName="Border" Property="Background" Value="#F9FAFB"/></Trigger></ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ModernInputStyle" TargetType="TextBox"><Setter Property="Height" Value="45"/><Setter Property="VerticalContentAlignment" Value="Center"/><Setter Property="Padding" Value="10,0"/><Setter Property="BorderBrush" Value="#E2E8F0"/><Setter Property="BorderThickness" Value="1"/><Setter Property="Template"><Setter.Value><ControlTemplate TargetType="TextBox"><Border x:Name="border" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="8"><ScrollViewer x:Name="PART_ContentHost"/></Border><ControlTemplate.Triggers><Trigger Property="IsFocused" Value="True"><Setter TargetName="border" Property="BorderBrush" Value="#10B981"/></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter></Style>
+        <Style x:Key="EditButtonStyle" TargetType="Button"><Setter Property="Width" Value="35"/><Setter Property="Height" Value="35"/><Setter Property="Cursor" Value="Hand"/><Setter Property="Background" Value="#EBF8FF"/><Setter Property="Foreground" Value="#3182CE"/><Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button"><Border Background="{TemplateBinding Background}" CornerRadius="8"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" TextElement.FontSize="16"/></Border></ControlTemplate></Setter.Value></Setter></Style>
+        <Style x:Key="DeleteButtonStyle" TargetType="Button"><Setter Property="Width" Value="35"/><Setter Property="Height" Value="35"/><Setter Property="Cursor" Value="Hand"/><Setter Property="Background" Value="#FFF5F5"/><Setter Property="Foreground" Value="#E53E3E"/><Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button"><Border Background="{TemplateBinding Background}" CornerRadius="8"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" TextElement.FontSize="16"/></Border></ControlTemplate></Setter.Value></Setter></Style>
+        <Style x:Key="DashCardStyle" TargetType="Border"><Setter Property="Background" Value="White"/><Setter Property="CornerRadius" Value="20"/><Setter Property="Padding" Value="25"/><Setter Property="Effect"><Setter.Value><DropShadowEffect Color="#A0AEC0" BlurRadius="20" ShadowDepth="5" Opacity="0.1"/></Setter.Value></Setter></Style>
+        
+        <Style TargetType="DataGridColumnHeader"><Setter Property="Background" Value="Transparent"/><Setter Property="Foreground" Value="#718096"/><Setter Property="FontWeight" Value="Bold"/><Setter Property="Padding" Value="15,12"/><Setter Property="HorizontalContentAlignment" Value="Left"/><Setter Property="BorderThickness" Value="0,0,0,1"/><Setter Property="BorderBrush" Value="#E2E8F0"/></Style>
+        <Style TargetType="DataGrid"><Setter Property="Background" Value="White"/><Setter Property="BorderThickness" Value="0"/><Setter Property="RowHeight" Value="55"/><Setter Property="GridLinesVisibility" Value="Horizontal"/><Setter Property="HorizontalGridLinesBrush" Value="#F7FAFC"/><Setter Property="HeadersVisibility" Value="Column"/><Setter Property="RowStyle"><Setter.Value><Style TargetType="DataGridRow"><Setter Property="Background" Value="White"/><Setter Property="BorderThickness" Value="0"/><Style.Triggers><Trigger Property="IsSelected" Value="True"><Setter Property="Background" Value="#F0FFF4"/></Trigger><Trigger Property="IsMouseOver" Value="True"><Setter Property="Background" Value="#FAFAFA"/></Trigger></Style.Triggers></Style></Setter.Value></Setter><Setter Property="CellStyle"><Setter.Value><Style TargetType="DataGridCell"><Setter Property="Padding" Value="15,0"/><Setter Property="BorderThickness" Value="0"/><Setter Property="FocusVisualStyle" Value="{x:Null}"/><Setter Property="Template"><Setter.Value><ControlTemplate TargetType="DataGridCell"><Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}"><ContentPresenter VerticalAlignment="Center" /></Border></ControlTemplate></Setter.Value></Setter><Style.Triggers><Trigger Property="IsSelected" Value="True"><Setter Property="Background" Value="Transparent"/><Setter Property="Foreground" Value="#2D3748"/><Setter Property="FontWeight" Value="SemiBold"/></Trigger></Style.Triggers></Style></Setter.Value></Setter></Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Background="#1A202C" CornerRadius="30,0,0,30">
+            <Grid Margin="25">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Margin="10,50,0,60">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Image Source="icon.png" Width="85" Height="85" Margin="0,0,20,0"/>
+                        <StackPanel VerticalAlignment="Center">
+                            <TextBlock Text="HOTEL" Foreground="White" FontSize="32" FontWeight="Bold"/>
+                            <TextBlock Text="MANAGEMENT" Foreground="#10B981" FontSize="16" FontWeight="Bold"/>
+                        </StackPanel>
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1">
+                    <Button x:Name="BtnDash" Content="Overview" Style="{StaticResource NavButtonStyle}" Tag="Active" Click="Navigate"/>
+                    <Button x:Name="BtnRooms" Content="Room Management" Style="{StaticResource NavButtonStyle}" Click="Navigate"/>
+                    <Button x:Name="BtnRes" Content="Reservations" Style="{StaticResource NavButtonStyle}" Click="Navigate"/>
+                    <Button x:Name="BtnConfig" Content="Configuration" Style="{StaticResource NavButtonStyle}" Click="Navigate"/>
+                </StackPanel>
+
+                <Button Grid.Row="2" Content="Logout" Click="Logout_Click" Height="50" Margin="0,0,0,15" Background="#2D3748" Foreground="#FC8181" FontWeight="Bold" Cursor="Hand">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border x:Name="logoutBorder" Background="{TemplateBinding Background}" CornerRadius="16">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="logoutBorder" Property="Background" Value="#E53E3E"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Grid>
+        </Border>
+
+        <Border Grid.Column="1" Background="#F7FAFC" CornerRadius="0,30,30,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <Grid Grid.Row="0">
+                    <TextBlock x:Name="TxtTitle" Text="Overview" VerticalAlignment="Center" FontSize="28" FontWeight="Bold" Foreground="#2D3748" Margin="50,0"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,50,0">
+                        <Border x:Name="SearchContainer" Background="White" CornerRadius="12" Height="35" Margin="0,0,20,0" Visibility="Collapsed">
+                            <Border.Effect><DropShadowEffect Color="#A0AEC0" BlurRadius="8" Opacity="0.1" ShadowDepth="2"/></Border.Effect>
+                            <StackPanel Orientation="Horizontal"><TextBlock Text="🔍" VerticalAlignment="Center" Margin="12,0,0,0" Foreground="#A0AEC0" FontSize="12"/><TextBox x:Name="SearchBox" Width="200" TextChanged="SearchBox_TextChanged" VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent" Margin="10,0,10,0" FontSize="13" Foreground="#4A5568" Tag="No. or Name"/></StackPanel>
+                        </Border>
+                        
+                        <Border Background="#EDF2F7" CornerRadius="12" Padding="25,0" Margin="0,0,25,0" Height="45">
+                            <Grid VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock x:Name="TxtClock" Text="08:30" FontSize="20" FontWeight="Bold" Foreground="#2D3748" VerticalAlignment="Center"/>
+                                    <TextBlock Text=" AM" FontSize="13" Foreground="#718096" VerticalAlignment="Center" Margin="4,2,0,0"/>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <Button Content="✕" Click="Close_Click" Style="{StaticResource CloseButtonStyle}" Width="80" Cursor="Hand"/>
+                    </StackPanel>
+                </Grid>
+
+                <ScrollViewer Grid.Row="1" Padding="50,0,50,40" VerticalScrollBarVisibility="Hidden">
+                    <StackPanel Margin="0,20,0,0">
+                        
+                        <Grid x:Name="DashboardPanel" Visibility="Visible">
+                            <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                            <Grid Grid.Row="0" Margin="0,0,0,30">
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                <Border Grid.Column="0" Style="{StaticResource DashCardStyle}" Margin="0,0,15,0"><StackPanel><StackPanel Orientation="Horizontal" Margin="0,0,0,15"><Border Background="#E6FFFA" Width="45" Height="45" CornerRadius="12"><TextBlock Text="€" Foreground="#10B981" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border><TextBlock Text="Total Revenue" VerticalAlignment="Center" Margin="15,0,0,0" Foreground="#A0AEC0" FontWeight="SemiBold"/></StackPanel><TextBlock x:Name="TxtRevenue" Text="€ 0" FontSize="32" FontWeight="Bold" Foreground="#2D3748"/><TextBlock Text="All time earnings" FontSize="12" Foreground="#10B981" Margin="0,5,0,0" FontWeight="SemiBold"/></StackPanel></Border>
+                                <Border Grid.Column="1" Style="{StaticResource DashCardStyle}" Margin="15,0"><StackPanel><StackPanel Orientation="Horizontal" Margin="0,0,0,15"><Border Background="#EBF8FF" Width="45" Height="45" CornerRadius="12"><TextBlock Text="%" Foreground="#3182CE" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border><TextBlock Text="Occupancy Rate" VerticalAlignment="Center" Margin="15,0,0,0" Foreground="#A0AEC0" FontWeight="SemiBold"/></StackPanel><TextBlock x:Name="TxtOccupancy" Text="0%" FontSize="32" FontWeight="Bold" Foreground="#2D3748"/><ProgressBar x:Name="PbOccupancy" Value="0" Height="6" BorderThickness="0" Background="#EDF2F7" Foreground="#3182CE" Margin="0,15,0,0"/></StackPanel></Border>
+                                <Border Grid.Column="2" Style="{StaticResource DashCardStyle}" Margin="15,0,0,0"><StackPanel><StackPanel Orientation="Horizontal" Margin="0,0,0,15"><Border Background="#FAF5FF" Width="45" Height="45" CornerRadius="12"><TextBlock Text="G" Foreground="#805AD5" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border><TextBlock Text="Active Guests" VerticalAlignment="Center" Margin="15,0,0,0" Foreground="#A0AEC0" FontWeight="SemiBold"/></StackPanel><TextBlock x:Name="TxtGuests" Text="0" FontSize="32" FontWeight="Bold" Foreground="#2D3748"/><TextBlock x:Name="TxtCheckIns" Text="0 checking in today" FontSize="12" Foreground="#805AD5" Margin="0,5,0,0" FontWeight="SemiBold"/></StackPanel></Border>
+                            </Grid>
+                            <Border Grid.Row="1" Style="{StaticResource DashCardStyle}"><Grid><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><StackPanel Grid.Column="0" Margin="0,0,30,0"><TextBlock Text="Live Room Status" FontSize="18" FontWeight="Bold" Foreground="#2D3748" Margin="0,0,0,20"/><TextBlock Text="Clean &amp; Ready" Foreground="#718096" Margin="0,0,0,5"/><Grid Margin="0,0,0,15"><ProgressBar x:Name="PbClean" Value="0" Height="10" Background="#EDF2F7" BorderThickness="0" Foreground="#10B981"/><TextBlock x:Name="TxtClean" Text="0%" HorizontalAlignment="Right" Margin="0,-20,0,0" FontWeight="Bold" Foreground="#10B981"/></Grid><TextBlock Text="Occupied" Foreground="#718096" Margin="0,0,0,5"/><Grid Margin="0,0,0,15"><ProgressBar x:Name="PbOccupied" Value="0" Height="10" Background="#EDF2F7" BorderThickness="0" Foreground="#3182CE"/><TextBlock x:Name="TxtOccupied" Text="0%" HorizontalAlignment="Right" Margin="0,-20,0,0" FontWeight="Bold" Foreground="#3182CE"/></Grid><TextBlock Text="Needs Cleaning" Foreground="#718096" Margin="0,0,0,5"/><Grid><ProgressBar x:Name="PbDirty" Value="0" Height="10" Background="#EDF2F7" BorderThickness="0" Foreground="#E53E3E"/><TextBlock x:Name="TxtDirty" Text="0%" HorizontalAlignment="Right" Margin="0,-20,0,0" FontWeight="Bold" Foreground="#E53E3E"/></Grid></StackPanel><StackPanel Grid.Column="1" Margin="30,0,0,0"><TextBlock Text="Quick Actions" FontSize="18" FontWeight="Bold" Foreground="#2D3748" Margin="0,0,0,20"/><Button Content="+ Manage Rooms" Click="Navigate" Tag="🛏️" Height="50" Background="#10B981" Foreground="White" FontWeight="Bold" Margin="0,0,0,10" Cursor="Hand"><Button.Template><ControlTemplate TargetType="Button"><Border Background="{TemplateBinding Background}" CornerRadius="12"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/></Border></ControlTemplate></Button.Template></Button><Button Content="View Reservations" Click="Navigate" Tag="📅" Height="50" Background="#2D3748" Foreground="White" FontWeight="Bold" Cursor="Hand"><Button.Template><ControlTemplate TargetType="Button"><Border Background="{TemplateBinding Background}" CornerRadius="12"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/></Border></ControlTemplate></Button.Template></Button></StackPanel></Grid></Border>
+                        </Grid>
+
+                        <StackPanel x:Name="TablePanel" Visibility="Collapsed">
+                            <Border x:Name="RoomFormPanel" Background="White" CornerRadius="20" Padding="30" Margin="0,0,0,35" Visibility="Collapsed">
+                                <Border.Effect><DropShadowEffect BlurRadius="25" Opacity="0.05" ShadowDepth="5"/></Border.Effect>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+                                    <StackPanel Margin="0,0,20,0"><TextBlock Text="Room Number" Foreground="#718096" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,8"/><TextBox x:Name="InpNum" Width="120" Style="{StaticResource ModernInputStyle}"/></StackPanel>
+                                    <StackPanel Margin="0,0,20,0"><TextBlock Text="Room Type" Foreground="#718096" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,8"/><ComboBox x:Name="InpType" Width="180" Height="45" VerticalContentAlignment="Center" Style="{StaticResource ModernComboBoxStyle}"><ComboBoxItem Content="Single Room" IsSelected="True"/><ComboBoxItem Content="Double Deluxe"/><ComboBoxItem Content="Presidential Suite"/></ComboBox></StackPanel>
+                                    
+                                    <StackPanel Margin="0,0,20,0">
+                                        <TextBlock Text="Facilities" Foreground="#718096" FontSize="13" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                                        <Grid>
+                                            <ToggleButton x:Name="FacExpander" Content="Select Features" Width="180" Style="{StaticResource MultiSelectToggleStyle}"/>
+                                            <Popup IsOpen="{Binding IsChecked, ElementName=FacExpander}" StaysOpen="False" PlacementTarget="{Binding ElementName=FacExpander}" Placement="Bottom">
+                                                <Border Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="5" Margin="0,4,0,0" Padding="10">
+                                                    <Border.Effect><DropShadowEffect BlurRadius="10" Opacity="0.1" ShadowDepth="2" Color="#A0AEC0"/></Border.Effect>
+                                                    <StackPanel x:Name="StackFacilities"><CheckBox Content="WiFi" Margin="5"/><CheckBox Content="TV" Margin="5"/><CheckBox Content="AC" Margin="5"/></StackPanel>
+                                                </Border>
+                                            </Popup>
+                                        </Grid>
+                                    </StackPanel>
+
+                                    <Button x:Name="BtnSaveRoom" Content="Add Room" Click="SaveRoom_Click" Width="120" Height="45" Margin="0,26,0,0" VerticalAlignment="Top" Background="#10B981" Foreground="White" FontWeight="Bold" Cursor="Hand" FocusVisualStyle="{x:Null}"><Button.Template><ControlTemplate TargetType="Button"><Border x:Name="addBorder" Background="{TemplateBinding Background}" CornerRadius="10"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/></Border><ControlTemplate.Triggers><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="addBorder" Property="Background" Value="#059669"/></Trigger></ControlTemplate.Triggers></ControlTemplate></Button.Template></Button>
+                                    <Button x:Name="BtnCancelEdit" Content="Cancel" Click="CancelEdit_Click" Width="80" Height="45" Margin="10,26,0,0" VerticalAlignment="Top" Background="Transparent" Foreground="#A0AEC0" Visibility="Collapsed" Cursor="Hand"><Button.Template><ControlTemplate TargetType="Button"><Border Background="Transparent"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/></Border></ControlTemplate></Button.Template></Button>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Background="White" CornerRadius="20" Padding="20">
+                                <StackPanel>
+                                    <Grid Margin="0,0,0,15">
+                                        <TextBlock Text="Data List" FontWeight="Bold" FontSize="18" Foreground="#2D3748" VerticalAlignment="Center"/>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                            <TextBlock Text="Filter by:" VerticalAlignment="Center" Foreground="#A0AEC0" Margin="0,0,10,0"/>
+                                            <ComboBox x:Name="FilterBox" Width="180" Height="45" VerticalContentAlignment="Center" SelectionChanged="FilterBox_SelectionChanged" Style="{StaticResource ModernComboBoxStyle}"/>
+                                        </StackPanel>
+                                    </Grid>
+                                    <DataGrid x:Name="DG" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="False" Background="Transparent" BorderThickness="0" RowHeight="65" GridLinesVisibility="None" HeadersVisibility="Column" SelectionMode="Single">
+                                        <DataGrid.Columns></DataGrid.Columns>
+                                    </DataGrid>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <Border x:Name="ConfigPanel" Background="White" CornerRadius="20" Padding="40" Margin="0,0,0,35" Visibility="Collapsed">
+                            <StackPanel>
+                                <TextBlock Text="Time Policies" FontSize="20" FontWeight="Bold" Foreground="#2D3748" Margin="0,0,0,20"/>
+                                <Grid Margin="0,0,0,20"><Grid.ColumnDefinitions><ColumnDefinition Width="220"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><TextBlock Text="Standard Check-in Time:" VerticalAlignment="Center" Foreground="#718096" FontSize="16"/><ComboBox x:Name="ComboCheckIn" Grid.Column="1" Width="150" Height="45" HorizontalAlignment="Left" VerticalContentAlignment="Center" Style="{StaticResource ModernComboBoxStyle}"/></Grid>
+                                <Grid Margin="0,0,0,40"><Grid.ColumnDefinitions><ColumnDefinition Width="220"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions><TextBlock Text="Standard Check-out Time:" VerticalAlignment="Center" Foreground="#718096" FontSize="16"/><ComboBox x:Name="ComboCheckOut" Grid.Column="1" Width="150" Height="45" HorizontalAlignment="Left" VerticalContentAlignment="Center" Style="{StaticResource ModernComboBoxStyle}"/></Grid>
+                                <TextBlock Text="Base Room Rates (per Night)" FontSize="20" FontWeight="Bold" Foreground="#2D3748" Margin="0,0,0,20"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                                    <StackPanel Margin="0,0,30,0"><TextBlock Text="Single Room" Foreground="#718096" Margin="0,0,0,5"/><Grid><TextBox x:Name="PriceSingle" Text="50" Width="120" Height="45" VerticalContentAlignment="Center" Padding="10,0" BorderBrush="#E2E8F0" BorderThickness="1"/><TextBlock Text="€" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="#A0AEC0"/></Grid></StackPanel>
+                                    <StackPanel Margin="0,0,30,0"><TextBlock Text="Double Deluxe" Foreground="#718096" Margin="0,0,0,5"/><Grid><TextBox x:Name="PriceDouble" Text="85" Width="120" Height="45" VerticalContentAlignment="Center" Padding="10,0" BorderBrush="#E2E8F0" BorderThickness="1"/><TextBlock Text="€" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="#A0AEC0"/></Grid></StackPanel>
+                                    <StackPanel><TextBlock Text="Presidential Suite" Foreground="#718096" Margin="0,0,0,5"/><Grid><TextBox x:Name="PriceSuite" Text="150" Width="120" Height="45" VerticalContentAlignment="Center" Padding="10,0" BorderBrush="#E2E8F0" BorderThickness="1"/><TextBlock Text="€" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="#A0AEC0"/></Grid></StackPanel>
+                                </StackPanel>
+                                <Button Content="Save Configuration" Click="SaveConfig_Click" Width="220" Height="50" HorizontalAlignment="Left" Background="#2D3748" Foreground="White" FontWeight="Bold" Cursor="Hand" Margin="0,20,0,0"><Button.Template><ControlTemplate TargetType="Button"><Border Background="{TemplateBinding Background}" CornerRadius="14"><ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/></Border></ControlTemplate></Button.Template></Button>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
